@@ -14,7 +14,7 @@ typedef struct {
     int y;
 } Point;
 
-const double angle_between_points = (2.0 * M_PI) / N_VERTICES;
+const double ANGLE_BETWEEN_POINTS = (2.0 * M_PI) / N_VERTICES;
 
 void calculate_points_position(Point *point, double *rotation_offset, Point *center, int *radius);
 void draw_polygon(Point *point);
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
 void calculate_points_position(Point *point, double *rotation_offset, Point *center, int *radius) {
     for (int vertex = 0; vertex < N_VERTICES; vertex++) {
-        double angle = vertex * angle_between_points + *rotation_offset;
+        double angle = vertex * ANGLE_BETWEEN_POINTS + *rotation_offset;
         (point + vertex)->x = center->x + *radius * cos(angle);
         (point + vertex)->y = center->y + *radius * sin(angle);
     }
