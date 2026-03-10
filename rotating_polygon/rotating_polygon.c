@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
 
     calculate_point_rotation(points, &rotation_offset, &center, &radius);
-    rotation_offset = rotation_offset >= 2.0 * M_PI ? 0 : rotation_offset + ROTATION;
+    rotation_offset = fmod(rotation_offset + ROTATION, 2.0 * M_PI);
     grow_direction = radius >= MAX_RADIUS || radius <= MIN_RADIUS ? -1 * grow_direction : grow_direction;
     radius += grow_direction * RADIUS_STEP;
 
