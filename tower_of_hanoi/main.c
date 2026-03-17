@@ -12,8 +12,8 @@
 #define DELAY 10
 
 // PARAMETERS
-#define N_PEGS 7
-#define N_DISCS 20
+#define N_PEGS 2
+#define N_DISCS 60
 #define DISK_STEP 30
 
 // KEYS
