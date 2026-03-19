@@ -10,10 +10,11 @@
 #define FLOOR 3 * PADDING
 #define FLOOR_HEIGHT 20
 #define DELAY 10
+#define WINNING_SCREEN_DELAY 500
 
 // PARAMETERS
-#define N_PEGS 2
-#define N_DISCS 60
+#define N_PEGS 7
+#define N_DISCS 80
 #define DISK_STEP 30
 
 // KEYS
@@ -39,6 +40,8 @@ typedef struct {
 } Peg;
 
 // HELPER FUNCTIONS
+int get_center_x() { return gfx_screenWidth() / 2; }
+int get_center_y() { return gfx_screenHeight() / 2; }
 int get_max_disk_width() { return gfx_screenWidth() / N_PEGS - PADDING; }
 int get_min_disk_width() { return get_max_disk_width() / N_DISCS; }
 int get_disk_height() { return (PEG_HEIGHT - PADDING) / N_DISCS; }
@@ -48,13 +51,14 @@ void write_moves_to_string(char *_moves) {
 }
 
 // INIT FUNCTIONS
-void initPegs(Peg *peg);
-void initDisks(Peg *peg);
+void initPegs(Peg *pegs);
+void initDisks(Peg *first_peg);
 
 // VIEW FUNCTIONS
 void drawStaticElements(Peg *pegs, int from_peg, int to_peg);
-void drawDisks(Peg *pegs, int from_peg, int to_peg);
+void drawDisks(Peg *pegs, int to_peg);
 void drawStandardScreen(Peg *pegs, int target_disk);
+void drawWinScreen();
 void animateMove(Peg *pegs, int *from_peg, int *to_peg);
 void drawWinScreen();
 
@@ -91,7 +95,7 @@ int main(int argc, char *argv[]) {
     if (!!(is_winning = check_win(pegs))) {
       drawStandardScreen(pegs, target_disk);
       gfx_updateScreen();
-      SDL_Delay(500);
+      SDL_Delay(WINNING_SCREEN_DELAY);
       break;
     }
     SDL_Delay(DELAY);
@@ -100,48 +104,33 @@ int main(int argc, char *argv[]) {
   if (is_quitting)
     return 0;
 
-  while (gfx_pollkey() != 'q') {
-    gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
-
-    gfx_textout(gfx_screenWidth() / 2 - 5 * PADDING,
-                gfx_screenHeight() / 2 - 4 * PADDING, "You win!", WHITE);
-    char *_moves = (char[20]){0};
-    write_moves_to_string(_moves);
-    gfx_textout(gfx_screenWidth() / 2 - 5 * PADDING,
-                gfx_screenHeight() / 2 - 2 * PADDING, _moves, WHITE);
-    gfx_textout(gfx_screenWidth() / 2 - 8 * PADDING,
-                gfx_screenHeight() / 2 + 2 * PADDING, "Press [q] to quit",
-                WHITE);
-
-    gfx_updateScreen();
-    SDL_Delay(DELAY);
-  }
+  drawWinScreen();
 
   return 0;
 }
 
-void initPegs(Peg *peg) {
-  for (int p = 0; p < N_PEGS; p++) {
-    (peg + p)->cx = p * (get_max_disk_width() + PADDING) + PADDING / 2 +
-                    get_max_disk_width() / 2;
-    (peg + p)->cy = gfx_screenHeight() - FLOOR;
+void initPegs(Peg *pegs) {
+  for (int peg = 0; peg < N_PEGS; peg++) {
+    (pegs + peg)->cx = peg * (get_max_disk_width() + PADDING) + PADDING / 2 +
+                       get_max_disk_width() / 2;
+    (pegs + peg)->cy = gfx_screenHeight() - FLOOR;
     for (int d = 0; d < N_DISCS; d++) {
-      (peg + p)->disks[d].width = -1;
-      (peg + p)->count = 0;
+      (pegs + peg)->disks[d].width = -1;
+      (pegs + peg)->count = 0;
     }
   }
 }
 
-void initDisks(Peg *peg) {
+void initDisks(Peg *first_peg) {
   int disk;
   int disk_width = get_max_disk_width();
   for (disk = 0; disk < N_DISCS; disk++) {
-    peg->disks[disk].x = peg->cx;
-    peg->disks[disk].y = peg->cy - disk * get_disk_height();
-    peg->disks[disk].width = disk_width;
+    first_peg->disks[disk].x = first_peg->cx;
+    first_peg->disks[disk].y = first_peg->cy - disk * get_disk_height();
+    first_peg->disks[disk].width = disk_width;
     disk_width -= get_min_disk_width();
   }
-  peg->count = disk;
+  first_peg->count = disk;
 }
 
 void drawStaticElements(Peg *pegs, int from_peg, int to_peg) {
@@ -167,7 +156,7 @@ void drawStaticElements(Peg *pegs, int from_peg, int to_peg) {
               WHITE);
 }
 
-void drawDisks(Peg *pegs, int from_peg, int to_peg) {
+void drawDisks(Peg *pegs, int to_peg) {
   for (int peg = 0; peg < N_PEGS; peg++) {
     for (int disk = 0; disk < (pegs + peg)->count - (to_peg == peg ? 1 : 0);
          disk++) {
@@ -187,7 +176,25 @@ void drawDisks(Peg *pegs, int from_peg, int to_peg) {
 void drawStandardScreen(Peg *pegs, int target_disk) {
   gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
   drawStaticElements(pegs, target_disk, -1);
-  drawDisks(pegs, target_disk, -1);
+  drawDisks(pegs, -1);
+}
+
+void drawWinScreen() {
+  while (gfx_pollkey() != SDLK_q) {
+    gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
+
+    gfx_textout(get_center_x() - 5 * PADDING, get_center_y() - 4 * PADDING,
+                "You win!", WHITE);
+    char *_moves = (char[20]){0};
+    write_moves_to_string(_moves);
+    gfx_textout(get_center_x() - 5 * PADDING, get_center_y() - 2 * PADDING,
+                _moves, WHITE);
+    gfx_textout(get_center_x() - 8 * PADDING, get_center_y() + 2 * PADDING,
+                "Press [q] to quit", WHITE);
+
+    gfx_updateScreen();
+    SDL_Delay(DELAY);
+  }
 }
 
 void animateMove(Peg *pegs, int *from_peg, int *to_peg) {
@@ -208,7 +215,7 @@ void animateMove(Peg *pegs, int *from_peg, int *to_peg) {
     gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
 
     drawStaticElements(pegs, *from_peg, *to_peg);
-    drawDisks(pegs, *from_peg, *to_peg);
+    drawDisks(pegs, *to_peg);
 
     gfx_filledRect(disk_start_x - (disk_width / 2), move_up - get_disk_height(),
                    disk_start_x + (disk_width / 2), move_up, BLUE);
@@ -225,7 +232,7 @@ void animateMove(Peg *pegs, int *from_peg, int *to_peg) {
     gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
 
     drawStaticElements(pegs, *from_peg, *to_peg);
-    drawDisks(pegs, *from_peg, *to_peg);
+    drawDisks(pegs, *to_peg);
 
     gfx_filledRect(move_horizontal - (disk_width / 2),
                    disk_top_y - get_disk_height(),
@@ -242,7 +249,7 @@ void animateMove(Peg *pegs, int *from_peg, int *to_peg) {
     gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, BLACK);
 
     drawStaticElements(pegs, *from_peg, *to_peg);
-    drawDisks(pegs, *from_peg, *to_peg);
+    drawDisks(pegs, *to_peg);
 
     gfx_filledRect(disk_end_x - (disk_width / 2), move_down - get_disk_height(),
                    disk_end_x + (disk_width / 2), move_down, BLUE);

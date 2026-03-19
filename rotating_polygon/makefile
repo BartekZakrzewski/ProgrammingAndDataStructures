@@ -1,14 +1,27 @@
-all: rotating_polygon
+CC          := gcc
+SDL_CFLAGS  := $(shell sdl2-config --cflags)
+SDL_LDFLAGS := $(shell sdl2-config --libs) -lSDL2_gfx
 
-rotating_polygon: rotating_polygon.o primlib.o
-	gcc -g $^ -o $@ -lSDL2_gfx `sdl2-config --libs` -lm
+CFLAGS      := -Wall -Wextra -std=c11 $(SDL_CFLAGS) -I.
+LDFLAGS     := $(SDL_LDFLAGS)
 
-.c.o:
-	gcc -g -Wall -pedantic `sdl2-config --cflags` -c $<
+TARGET      := rotating_polygon
+
+SRCS        := main.c primlib.c
+OBJS        := main.o primlib.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+main.o: main.c primlib.h
+	$(CC) $(CFLAGS) -c main.c
 
 primlib.o: primlib.c primlib.h
-
-rotating_polygon.o: rotating_polygon.c primlib.h
+	$(CC) $(CFLAGS) -c primlib.c
 
 clean:
-	-rm primlib.o rotating_polygon.o rotating_polygon
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: all clean

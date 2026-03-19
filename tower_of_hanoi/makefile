@@ -2,13 +2,16 @@ CC          := gcc
 SDL_CFLAGS  := $(shell sdl2-config --cflags)
 SDL_LDFLAGS := $(shell sdl2-config --libs) -lSDL2_gfx
 
-CFLAGS      := -Wall -Wextra -std=c11 $(SDL_CFLAGS) -I.
-LDFLAGS     := $(SDL_LDFLAGS)
+CFLAGS      := -fsanitize=undefined -Wall -Wextra -std=c11 $(SDL_CFLAGS) -I.
+LDFLAGS     := -fsanitize=undefined $(SDL_LDFLAGS)
 
 TARGET      := hanoi
 
 SRCS        := main.c primlib.c
 OBJS        := main.o primlib.o
+
+run: clean all
+	./$(TARGET)
 
 all: $(TARGET)
 
