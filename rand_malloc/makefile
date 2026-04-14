@@ -2,7 +2,7 @@
 headers = rand_malloc.h
 
 # List your *.c files:
-sources = test.c rand_malloc.c
+sources = text_processing.c rand_malloc.c
 
 # Specify name of your program:
 executable = test

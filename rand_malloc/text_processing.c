@@ -1,3 +1,4 @@
+#include "rand_malloc.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[]) {
   int numbers_size = 1;
   char **numbers = (char **)malloc(sizeof(char *) * n_numbers);
   if (numbers == NULL) {
+    printf("numbers init error\n");
     return 1;
   }
   numbers[0] = NULL;
