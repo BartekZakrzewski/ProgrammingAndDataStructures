@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
                 search(option == INSURANCES,
                        option == ACCOUNTS ? accounts : insurances);
             } else if (cmd == LIST) {
-                printf(option == ACCOUNTS ? "Accounts:\n" : "Insurances:\n");
+                // printf(option == ACCOUNTS ? "Accounts:\n" : "Insurances:\n");
                 list(option == INSURANCES,
                      option == ACCOUNTS ? accounts : insurances);
             }

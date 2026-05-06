@@ -1,0 +1,13 @@
+Language: C
+BasedOnStyle: LLVM
+IndentWidth: 4
+UseTab: Never
+ColumnLimit: 0
+BreakBeforeBraces: Attach
+PointerAlignment: Right
+AlignTrailingComments: true
+AlignConsecutiveAssignments: true
+SortIncludes: true
+IndentPPDirectives: AfterHash
+AllowShortFunctionsOnASingleLine: None
+SpaceBeforeParens: ControlStatements
