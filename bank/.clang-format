@@ -9,5 +9,5 @@ AlignTrailingComments: true
 AlignConsecutiveAssignments: true
 SortIncludes: true
 IndentPPDirectives: AfterHash
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: Inline
 SpaceBeforeParens: ControlStatements
