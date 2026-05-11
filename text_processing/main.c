@@ -1,4 +1,3 @@
-#include "../rand_malloc/rand_malloc.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -113,7 +112,7 @@ int saveLine(char ***numbers, int *numbers_size, int *n_numbers, char *line,
   // printf("Debug %s | %d\n", line, *line_size);
   // line = new_line;
   // printf("Debug %s\n", line);
-  printf("\nDEBUG: %s | %lu\n", line, sizeof(char *) * sizeof(line));
+  // printf("\nDEBUG: %s | %lu\n", line, sizeof(char *) * sizeof(line));
   char *new_numbers = (char *)realloc((*numbers)[*n_numbers - 1],
                                       sizeof(char *) * (*line_size + 1));
   if (new_numbers == NULL) {
