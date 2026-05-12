@@ -1,10 +1,12 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g -pedantic
 
 TARGET = bank
 
 SRCS = main.c helpers/helpers.c options/options.c actions/actions.c table/table.c 
 OBJS = $(SRCS:.c=.o)
+
+all: $(TARGET)
 
 reset_db:
 	rm db/accounts.dat

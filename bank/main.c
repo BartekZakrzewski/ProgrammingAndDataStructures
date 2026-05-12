@@ -58,5 +58,8 @@ int main(void) {
         }
     }
 
+    fclose(accounts);
+    fclose(insurances);
+
     return 0;
 }
