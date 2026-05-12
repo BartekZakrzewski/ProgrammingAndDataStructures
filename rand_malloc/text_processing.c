@@ -1,4 +1,4 @@
-#include "rand_malloc.h"
+#include "../rand_malloc/rand_malloc.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   int numbers_size = 1;
   char **numbers = (char **)malloc(sizeof(char *) * n_numbers);
   if (numbers == NULL) {
-    printf("numbers init error\n");
+    free(numbers);
     return 1;
   }
   numbers[0] = NULL;
@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
         saveLine(&numbers, &numbers_size, &n_numbers, line, &line_size);
     if (error_code == -1) {
       free(line);
+      freeNumbers(numbers, n_numbers - 1);
       printf("Incorrect input\n");
       return 1;
     }
@@ -40,17 +41,22 @@ int main(int argc, char *argv[]) {
     }
     free(line);
   }
+  
   char *result = sum(numbers, n_numbers - 1);
   if (result == NULL) {
     freeNumbers(numbers, n_numbers - 1);
     printf("Error while summing numbers\n");
     return 1;
   }
-  printf("Result:\n%s\n", result);
+  printf("\nResult:\n%s\n", result);
+  free(result);
 
   printf("\nInput numbers:\n");
   for (int i = 0; i < n_numbers - 1; i++) {
     printf("%s\n", numbers[i]);
+  }
+  for (int i = 0; i < n_numbers - 1; i++) {
+    free(numbers[i]);
   }
   free(numbers);
 
@@ -125,6 +131,7 @@ int saveLine(char ***numbers, int *numbers_size, int *n_numbers, char *line,
     (*numbers)[*n_numbers - 1][(*numbers_size) - 1] = line[i];
     (*numbers_size)++;
   }
+
   (*numbers)[*n_numbers - 1][(*numbers_size) - 1] = '\0';
   *(n_numbers) += 1;
   *(numbers_size) = 1;
@@ -139,7 +146,7 @@ int saveLine(char ***numbers, int *numbers_size, int *n_numbers, char *line,
 }
 
 char *getLine(int *len) {
-  char character;
+  int character;
   int character_index = 0;
   int line_size = 1;
   char *line = (char *)malloc(line_size * sizeof(char));
@@ -180,7 +187,7 @@ char *getLine(int *len) {
 char *sum(char **numbers, int n_numbers) {
   int *lengths = (int *)malloc(sizeof(int) * n_numbers);
   if (lengths == NULL) {
-
+    free(lengths);
     return NULL;
   }
   int max_length = 0;
@@ -195,6 +202,7 @@ char *sum(char **numbers, int n_numbers) {
   }
   char *result = (char *)malloc(sizeof(char) * (max_length + 2));
   if (result == NULL) {
+    free(result);
     free(lengths);
     return NULL;
   }
@@ -221,5 +229,6 @@ char *sum(char **numbers, int n_numbers) {
   while (*result == '0' && *(result + 1) != '\0') {
     result++;
   }
+  free(lengths);
   return result;
 }
