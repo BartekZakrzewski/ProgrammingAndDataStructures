@@ -140,7 +140,6 @@ void transfer(FILE *accounts, FILE *insurances) {
     read_string("Enter amount to transfer: ", __am, sizeof(__am));
     double __amount = atof(__am);
     while (__amount < 0) {
-        printf("Amount has to be >0: ");
         read_string("Amount has to be >0: ", __am, sizeof(__am));
         __amount = atof(__am);
     }
@@ -251,7 +250,6 @@ void widthdraw(FILE *accounts, FILE *insurances) {
     read_string("Enter amount to widthdraw: ", __am, sizeof(__am));
     double __amount = atof(__am);
     while (__amount < 0) {
-        printf("Amount has to be >0: ");
         read_string("Amount has to be >0: ", __am, sizeof(__am));
         __amount = atof(__am);
     }
@@ -328,6 +326,10 @@ void deposit(FILE *accounts, FILE *insurances) {
     char __am[64];
     read_string("Enter amount to deposit: ", __am, sizeof(__am));
     double __amount = atof(__am);
+    while (__amount < 0) {
+        read_string("Amount has to be >0: ", __am, sizeof(__am));
+        __amount = atof(__am);
+    }
     printf("\n\nAmount: %.2f\n\n", __amount);
 
     int valid_from = 0;
