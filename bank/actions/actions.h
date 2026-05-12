@@ -9,6 +9,19 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/* Menu layers definitions */
+#define MAIN_MENU 0
+#define EXIT 1
+#define ACCOUNTS 2
+#define INSURANCE 3
+#define TRANSFER 4
+
+#define ACC_CREATE 2
+#define ACC_LIST 3
+#define ACC_SEARCH 4
+#define ACC_WIDTHDRAW 5
+#define ACC_DEPOSIT 6
+
 /* Insurance actions */
 int try_ins(FILE *accounts, FILE *insurances);
 

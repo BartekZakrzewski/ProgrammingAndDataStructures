@@ -133,24 +133,48 @@ void transfer(FILE *accounts, FILE *insurances) {
     char __am[64];
     read_string("Enter amount to transfer: ", __am, sizeof(__am));
     double __amount = atof(__am);
+    while (__amount < 0) {
+        printf("Amount has to be >0: ");
+        read_string("Amount has to be >0: ", __am, sizeof(__am));
+        __amount = atof(__am);
+    }
     printf("\n\nAmount: %.2f\n\n", __amount);
 
+    int valid_from = 0;
     Account from;
     fseek(accounts, 0, SEEK_SET);
     while (fread(&from, sizeof(Account), 1, accounts) == 1) {
-        if (strcmp(__from, from.accId) == 0)
+        if (strcmp(__from, from.accId) == 0) {
+            valid_from = 1;
             break;
+        }
     }
 
+    int valid_to = 0;
     Account to;
     fseek(accounts, 0, SEEK_SET);
     while (fread(&to, sizeof(Account), 1, accounts) == 1) {
-        if (strcmp(__to, to.accId) == 0)
+        if (strcmp(__to, to.accId) == 0) {
+            valid_to = 1;
             break;
+        }
+    }
+
+    if (!valid_to || !valid_from) {
+        printf("Invalid account id\n");
+        sleep(1);
+        return;
+    }
+
+    if (strcmp(__from, __to) == 0) {
+        printf("Cannot transfer to the same account!\n");
+        sleep(1);
+        return;
     }
 
     if (__amount > from.balance) {
         printf("Not enough money\n");
+        sleep(1);
         return;
     }
 
@@ -181,6 +205,7 @@ void transfer(FILE *accounts, FILE *insurances) {
     read_string("", confirm, sizeof(confirm));
     if (confirm[0] != 'y' && confirm[0] != 'Y') {
         printf("Cancelled.\n");
+        sleep(1);
         return;
     }
 
@@ -213,13 +238,27 @@ void widthdraw(FILE *accounts, FILE *insurances) {
     char __am[64];
     read_string("Enter amount to widthdraw: ", __am, sizeof(__am));
     double __amount = atof(__am);
+    while (__amount < 0) {
+        printf("Amount has to be >0: ");
+        read_string("Amount has to be >0: ", __am, sizeof(__am));
+        __amount = atof(__am);
+    }
     printf("\n\nAmount: %.2f\n\n", __amount);
 
+    int valid_from = 0;
     Account from;
     fseek(accounts, 0, SEEK_SET);
     while (fread(&from, sizeof(Account), 1, accounts) == 1) {
-        if (strcmp(__from, from.accId) == 0)
+        if (strcmp(__from, from.accId) == 0) {
+            valid_from = 1;
             break;
+        }
+    }
+
+    if (!valid_from) {
+        printf("Invalid account id\n");
+        sleep(1);
+        return;
     }
 
     if (__amount > from.balance) {
@@ -276,11 +315,18 @@ void deposit(FILE *accounts, FILE *insurances) {
     double __amount = atof(__am);
     printf("\n\nAmount: %.2f\n\n", __amount);
 
+    int valid_from = 0;
     Account from;
     fseek(accounts, 0, SEEK_SET);
     while (fread(&from, sizeof(Account), 1, accounts) == 1) {
         if (strcmp(__from, from.accId) == 0)
             break;
+    }
+
+    if (!valid_from) {
+        printf("Invalid account id\n");
+        sleep(1);
+        return;
     }
 
     from.balance += __amount;

@@ -15,47 +15,40 @@ int main(void) {
         insurances = fopen("db/insurances.dat", "w+b");
     }
 
-    int option = 0;
+    int option = MAIN_MENU;
 
     while (1) {
         __refresh();
-        print_banner(option == 0);
-        if (option == 0) {
+        print_banner(option == MAIN_MENU);
+        if (option == MAIN_MENU) {
             option = action(option, MENU_OPTIONS_LEN);
-            if (option == 1)
+            if (option == EXIT)
                 break;
-        } else if (option == 2) {
+        } else if (option == ACCOUNTS) {
             option = action(option, ACCOUNT_OPTIONS_LEN);
-            /* Go Back */
-            if (option == 1) {
-                option = 0;
+            if (option == EXIT) {
+                option = MAIN_MENU;
                 continue;
             }
-            if (option == 2) {
-                /* Create Account */
+
+            if (option == ACC_CREATE) {
                 try_acc(accounts, insurances);
-            } else if (option == 3) {
-                /* List Accounts */
+            } else if (option == ACC_LIST) {
                 list_acc(accounts, insurances);
-            } else if (option == 4) {
-                /* Search Accounts */
+            } else if (option == ACC_SEARCH) {
                 search_acc(accounts, insurances);
-            } else if (option == 5) {
-                /* Widthdraw */
+            } else if (option == ACC_WIDTHDRAW) {
                 widthdraw(accounts, insurances);
-            } else if (option == 6) {
-                /* Deposit */
+            } else if (option == ACC_DEPOSIT) {
                 deposit(accounts, insurances);
             }
-            option = 2;
-        } else if (option == 3) {
-            /* Create Insurance */
+            option = ACCOUNTS;
+        } else if (option == INSURANCE) {
             try_ins(accounts, insurances);
-            option = 0;
-        } else if (option == 4) {
-            /* Transfer Money */
+            option = MAIN_MENU;
+        } else if (option == TRANSFER) {
             transfer(accounts, insurances);
-            option = 0;
+            option = MAIN_MENU;
         }
     }
 
