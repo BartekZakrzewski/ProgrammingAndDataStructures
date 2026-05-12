@@ -20,6 +20,9 @@ int try_ins(FILE *accounts, FILE *insurances) {
     }
 
     FILE *_insurances = fopen("db/insurances_buffer.dat", "w+b");
+    if (_insurances == NULL) {
+        return -4;
+    }
     fseek(_insurances, 0, SEEK_SET);
     fwrite(&insurance, sizeof(Insurance), 1, _insurances);
     print_table(accounts, _insurances, "ID", insurance.accId);
@@ -64,6 +67,9 @@ int try_acc(FILE *fp, FILE *__ins) {
     }
 
     FILE *_accounts = fopen("db/accounts_buffer.dat", "w+b");
+    if (_accounts == NULL) {
+        return -4;
+    }
     fseek(_accounts, 0, SEEK_SET);
     fwrite(&account, sizeof(Account), 1, _accounts);
     print_table(_accounts, __ins, "ID", account.accId);
@@ -183,6 +189,9 @@ void transfer(FILE *accounts, FILE *insurances) {
 
     printf("\n\nAccount sending transfer after transaction\n\n");
     FILE *_accounts = fopen("db/accounts_buffer.dat", "w+b");
+    if (_accounts == NULL) {
+        return;
+    }
     fseek(_accounts, 0, SEEK_SET);
     fwrite(&from, sizeof(Account), 1, _accounts);
     print_table(_accounts, insurances, "ID", from.accId);
@@ -192,6 +201,9 @@ void transfer(FILE *accounts, FILE *insurances) {
 
     printf("\n\nAccount receiving transfer after transaction\n\n");
     _accounts = fopen("db/accounts_buffer.dat", "w+b");
+    if (_accounts == NULL) {
+        return;
+    }
     fseek(_accounts, 0, SEEK_SET);
     fwrite(&to, sizeof(Account), 1, _accounts);
     print_table(_accounts, insurances, "ID", to.accId);
@@ -271,6 +283,9 @@ void widthdraw(FILE *accounts, FILE *insurances) {
 
     printf("\n\nAccount after widthdrawing\n\n");
     FILE *_accounts = fopen("db/accounts_buffer.dat", "w+b");
+    if (_accounts == NULL) {
+        return;
+    }
     fseek(_accounts, 0, SEEK_SET);
     fwrite(&from, sizeof(Account), 1, _accounts);
     print_table(_accounts, insurances, "ID", from.accId);
@@ -333,6 +348,9 @@ void deposit(FILE *accounts, FILE *insurances) {
 
     printf("\n\nAccount after deposit\n\n");
     FILE *_accounts = fopen("db/accounts_buffer.dat", "w+b");
+    if (_accounts == NULL) {
+        return;
+    }
     fseek(_accounts, 0, SEEK_SET);
     fwrite(&from, sizeof(Account), 1, _accounts);
     print_table(_accounts, insurances, "ID", from.accId);

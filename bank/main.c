@@ -9,10 +9,16 @@ int main(void) {
     FILE *accounts = fopen("db/accounts.dat", "r+b");
     if (accounts == NULL) {
         accounts = fopen("db/accounts.dat", "w+b");
+        if (accounts == NULL) {
+            return 1;
+        }
     }
     FILE *insurances = fopen("db/insurances.dat", "r+b");
     if (insurances == NULL) {
         insurances = fopen("db/insurances.dat", "w+b");
+        if (insurances == NULL) {
+            return 1;
+        }
     }
 
     int option = MAIN_MENU;
