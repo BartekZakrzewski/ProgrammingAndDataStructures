@@ -334,8 +334,10 @@ void deposit(FILE *accounts, FILE *insurances) {
     Account from;
     fseek(accounts, 0, SEEK_SET);
     while (fread(&from, sizeof(Account), 1, accounts) == 1) {
-        if (strcmp(__from, from.accId) == 0)
+        if (strcmp(__from, from.accId) == 0) {
+            valid_from = 1;
             break;
+        }
     }
 
     if (!valid_from) {

@@ -146,7 +146,7 @@ int validate_insurance(Insurance insurance, FILE *accounts) {
 
 /* Misc */
 Insurance _create_insurance(FILE *insurances) {
-    Insurance insurance;
+    Insurance insurance = {0};
 
     generateUniqueId(insurances, insurance.insuraceId);
     read_string(create_insurance[0], insurance.accId, 20);
@@ -160,7 +160,7 @@ Insurance _create_insurance(FILE *insurances) {
 }
 
 Account _create_account(FILE *fp) {
-    Account account;
+    Account account = {0};
 
     generateUniqueId(fp, account.accId);
     read_string(create_account[0], account.name, NAME_LEN);
